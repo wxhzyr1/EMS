@@ -6,11 +6,11 @@
     },
     {
       "name": "EntryAbility_desc",
-      "value": "description"
+      "value": "这是一个应用描述"
     },
     {
       "name": "EntryAbility_label",
-      "value": "label"
+      "value": "神领物流"
     }
   ]
 }
