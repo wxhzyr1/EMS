@@ -1,0 +1,1 @@
+export const USER_SETTING:string="shenling_key"
