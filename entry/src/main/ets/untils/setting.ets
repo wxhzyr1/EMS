@@ -15,9 +15,10 @@ export class UserSettingClass{
   getStore(){
     return preferences.getPreferences(this.context,USER_SETTING)
   }
-  async getUserAd(){
+  async getUserAd():Promise<AdvertClass>{
     const userStore=await this.getStore();
     const advise:AdvertClass= JSON.parse(await userStore.get(USER_SETTING_AD,JSON.stringify(this.user_default_ad)) as string) as AdvertClass
+    return advise
   }
   async setUserAd(advise:AdvertClass){
     const store=await this.getStore();
