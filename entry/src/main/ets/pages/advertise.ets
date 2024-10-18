@@ -1,7 +1,8 @@
 import { AdvertClass } from '../models'
 import { UserSettingClass } from '../untils'
 import { router } from '@kit.ArkUI'
-
+import { USER_TOKEN } from '../constants'
+PersistentStorage.persistProp(USER_TOKEN,"")
 @Entry
 @Component
 struct Advertise {
@@ -13,16 +14,24 @@ struct Advertise {
     ad_show:true
   }
   interval:number=0
+  checkToken(){
+    if(AppStorage.get(USER_TOKEN))
+      router.replaceUrl({
+        url:"pages/HomePage/HomePage"
+      })
+    else
+      router.replaceUrl({
+        url:"pages/Index"
+      })
+  }
   async aboutToAppear(): Promise<void> {
     const preference=await new UserSettingClass(getContext(this))
     this.advertise=await preference.getUserAd()
     this.interval=setInterval(()=>{
       this.advertise.ad_time--;
       if(!this.advertise.ad_time){
-        clearInterval(this.interval);
-        router.replaceUrl({
-          url:"pages/Index"
-        })
+        this.checkToken()
+        clearInterval(this.interval)
       }
     },1000)
   }
@@ -36,9 +45,7 @@ struct Advertise {
         top:2,
         bottom:2
       }).onClick(()=>{
-        router.replaceUrl({
-          url:"pages/Index"
-        })
+        this.checkToken
       })
     }
   }

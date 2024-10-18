@@ -1,6 +1,7 @@
 {
   "src": [
-    "pages/Index",
-    "pages/advertise"
+    "pages/login",
+    "pages/advertise",
+    "pages/HomePage/HomePage"
   ]
 }

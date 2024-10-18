@@ -1,5 +1,5 @@
 import preferences from '@ohos.data.preferences';
-import { USER_SETTING, USER_SETTING_AD } from '../constants';
+import { USER_SETTING, USER_SETTING_AD, USER_TOKEN } from '../constants';
 import { AdvertClass } from '../models';
 
 export class UserSettingClass{
@@ -24,5 +24,15 @@ export class UserSettingClass{
     const store=await this.getStore();
     await store.put(USER_SETTING_AD,JSON.stringify(advise))
     await store.flush()
+  }
+  async setToken(){
+    const store=await this.getStore()
+    await store.put(USER_TOKEN,"11111")
+    store.flush()
+  }
+  async getToken(){
+    const store=await this.getStore()
+    const token= await store.get(USER_TOKEN,"")
+    return token
   }
 }

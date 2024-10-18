@@ -1,18 +1,17 @@
 @Entry
 @Component
-struct Index {
+struct HomePage {
   @State message: string = 'Hello World';
-
   build() {
     RelativeContainer() {
-      Text(this.message)
-        .id('HelloWorld')
+      Text("首页")
+        .id('HomePageHelloWorld')
         .fontSize(50)
         .fontWeight(FontWeight.Bold)
         .alignRules({
           center: { anchor: '__container__', align: VerticalAlign.Center },
           middle: { anchor: '__container__', align: HorizontalAlign.Center }
-        }).fontColor($r("app.color.primary"))
+        })
     }
     .height('100%')
     .width('100%')
