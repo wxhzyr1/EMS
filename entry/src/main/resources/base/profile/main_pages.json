@@ -2,6 +2,7 @@
   "src": [
     "pages/login",
     "pages/advertise",
-    "pages/HomePage/HomePage"
+    "pages/HomePage/HomePage",
+    "pages/notFound"
   ]
 }
