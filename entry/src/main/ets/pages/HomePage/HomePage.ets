@@ -1,19 +1,48 @@
+interface bars{
+  title:string,
+  name:string,
+  icon:Resource
+}
 @Entry
 @Component
 struct HomePage {
-  @State message: string = 'Hello World';
-  build() {
-    RelativeContainer() {
-      Text("首页")
-        .id('HomePageHelloWorld')
-        .fontSize(50)
-        .fontWeight(FontWeight.Bold)
-        .alignRules({
-          center: { anchor: '__container__', align: VerticalAlign.Center },
-          middle: { anchor: '__container__', align: HorizontalAlign.Center }
-        })
+  @State
+  currentBar:string="task"
+  @Builder
+  barCard(item:bars){
+    Column(){
+      Image(item.icon).width(22).height(22).margin({
+        bottom:5
+      }).fillColor(this.currentBar===item.name?$r('app.color.primary'):$r('app.color.text_secondary'))
+      Text(item.title).fontSize(10)
     }
-    .height('100%')
-    .width('100%')
+  }
+  tabBars:bars[]=[
+    {
+      title:'任务',
+      name:'task',
+      icon:$r('app.media.ic_tab_btn_task')
+    },
+    {
+      title:'信息',
+      name:'message',
+      icon:$r('app.media.ic_tab_btn_mess_nor')
+    },
+    {
+      title:'我的',
+      name:'mine',
+      icon:$r('app.media.ic_tab_btn_mine_nor')
+    }
+  ]
+  build() {
+    Tabs({barPosition:BarPosition.End}){
+      ForEach(this.tabBars,(item:bars)=>{
+        TabContent(){
+          Text(item.title)
+        }.tabBar(this.barCard(item))
+      })
+    }.onChange(index=>{
+      this.currentBar=this.tabBars[index].name
+    })
   }
 }

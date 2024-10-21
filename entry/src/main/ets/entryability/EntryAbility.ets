@@ -28,14 +28,14 @@ export default class EntryAbility extends UIAbility {
     })
     await preference.setUserAd(Online_Ad);
     const advertise=await preference.getUserAd();
-    // if(advertise.ad_show)
-    //   windowStage.loadContent('pages/advertise')
-    // else
-    //   windowStage.loadContent('pages/Index');
-    if(await preference.getToken())
-      windowStage.loadContent('pages/HomePage/HomePage')
+    if(advertise.ad_show)
+      windowStage.loadContent('pages/advertise')
     else
       windowStage.loadContent('pages/login');
+    // if(await preference.getToken())
+    //   windowStage.loadContent('pages/HomePage/HomePage')
+    // else
+    //   windowStage.loadContent('pages/login');
   }
 
   onWindowStageDestroy(): void {

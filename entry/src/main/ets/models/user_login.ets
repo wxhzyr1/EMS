@@ -1,13 +1,13 @@
 export interface userLogin{
-  username:string,
+  account:string,
   password:string
 }
 export class userLoginInfo implements userLogin{
-  username: string=""
+  account: string=""
   password: string=""
 
   constructor(user:userLogin) {
-    this.username=user.username
+    this.account=user.account
     this.password=user.password
   }
 }

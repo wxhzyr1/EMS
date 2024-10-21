@@ -21,7 +21,7 @@ struct Advertise {
       })
     else
       router.replaceUrl({
-        url:"pages/Index"
+        url:"pages/login"
       })
   }
   async aboutToAppear(): Promise<void> {
@@ -45,7 +45,7 @@ struct Advertise {
         top:2,
         bottom:2
       }).onClick(()=>{
-        this.checkToken
+        this.checkToken()
       })
     }
   }

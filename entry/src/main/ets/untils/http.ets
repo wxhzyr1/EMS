@@ -1,10 +1,10 @@
 import { http } from '@kit.NetworkKit'
-import { USER_TOKEN } from '../constants';
-import { BASE_URL } from '../models'
+import { USER_TOKEN,BASE_URL } from '../constants';
 import { promptAction, router } from '@kit.ArkUI';
+import { httpType } from '.';
 
 const httpRequest=http.createHttp()
-export async  function requestHttp<T>(url:string,method:http.RequestMethod=http.RequestMethod.GET,data?:object,headers?:object){
+async  function requestHttp<T>(url:string,method:http.RequestMethod=http.RequestMethod.GET,data?:object):Promise<T>{
   let httpUrl=BASE_URL+url;
   if(method===http.RequestMethod.GET&&data){
     const arr=Object.keys(data);
@@ -23,22 +23,31 @@ export async  function requestHttp<T>(url:string,method:http.RequestMethod=http.
     }
   }
   try {
+    // AlertDialog.show({
+    //   message:httpUrl+"--"+JSON.stringify(httpConfig)
+    // })
     const res=await httpRequest.request(httpUrl,httpConfig)
-    if(res.responseCode===200){
+    const result=JSON.parse(res.result as string) as httpType<T>
+    console.log(JSON.stringify(result))
+    if(result.code===200){
       promptAction.showToast({
         message:"成功"
       })
-      return Promise.resolve(JSON.parse(res.result as string))
+      return Promise.resolve(result.data as T)
     }
     else if(res.responseCode===404){
       router.pushUrl({
         url:'pages/notFound'
       })
+      return Promise.reject(new Error("404"))
     }
     else {
-      promptAction.showToast({
-        message:"错误"
-      })
+      // AlertDialog.show({
+      //   message:JSON.stringify(result)
+      // })
+      // promptAction.showToast({
+      //   message:"错误"
+      // })
       return Promise.reject(new Error("未知错误"))
     }
   }catch (error){
@@ -47,4 +56,7 @@ export async  function requestHttp<T>(url:string,method:http.RequestMethod=http.
     })
     return Promise.reject(error)
   }
+}
+export function axios<T>(url:string,method:http.RequestMethod,data?:object):Promise<T>{
+  return requestHttp<T>(url,method,data)
 }

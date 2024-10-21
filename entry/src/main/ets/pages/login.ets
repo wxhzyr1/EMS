@@ -1,6 +1,8 @@
+import { login } from '../api';
 import { USER_TOKEN } from '../constants';
 import { userLoginInfo } from '../models';
 import { UserSettingClass } from '../untils';
+import { promptAction, router } from '@kit.ArkUI';
 
 PersistentStorage.persistProp(USER_TOKEN,"")
 @Entry
@@ -8,17 +10,28 @@ PersistentStorage.persistProp(USER_TOKEN,"")
 struct Login {
   @State
   @Watch('loginChange')
-  login_message:userLoginInfo=new userLoginInfo({username:"",password:""})
+  login_message:userLoginInfo=new userLoginInfo({account:"yugege",password:"123456"})
   @State
   loading:boolean=false
   @State
   enabled_login:boolean=false
   store=new UserSettingClass(getContext())
   loginChange(){
-    this.enabled_login=!!(this.login_message.username&&this.login_message.password)
+    this.enabled_login=!!(this.login_message.account&&this.login_message.password)
   }
   setToken(){
     AppStorage.set<string>(USER_TOKEN,"token")
+  }
+   async login(){
+    const token:string=await login(this.login_message)
+    // promptAction.showToast({
+    //   message:token
+    // })
+     AppStorage.set(USER_TOKEN,token)
+     this.loading=false
+     router.replaceUrl({
+       url:'pages/HomePage/HomePage'
+     })
   }
   build() {
     Column() {
@@ -37,9 +50,9 @@ struct Login {
       .margin({ top: 50, bottom: 50 })
 
       // 用户名输入框
-      TextInput({ placeholder: '请输入账号',text:this.login_message.username }).margin({
+      TextInput({ placeholder: '请输入账号',text:this.login_message.account }).margin({
         bottom:20
-      }).onChange(val=>this.login_message.username=val)
+      }).onChange(val=>this.login_message.account=val)
       // 密码框
       TextInput({ placeholder: '请输入密码',text:this.login_message.password})
         .type(InputType.Password) // 密码框
@@ -67,6 +80,7 @@ struct Login {
       .margin({ top: 50 })
       .onClick(() =>{
         this.loading=true
+        this.login()
       })
     }
     .padding({ left: 32, right: 32 })
