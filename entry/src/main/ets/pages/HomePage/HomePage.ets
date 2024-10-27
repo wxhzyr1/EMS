@@ -1,3 +1,5 @@
+import MyPage from '../My/My'
+
 interface bars{
   title:string,
   name:string,
@@ -21,7 +23,7 @@ struct HomePage {
     {
       title:'任务',
       name:'task',
-      icon:$r('app.media.ic_tab_btn_task')
+      icon:$r('app.media.ic_tab_btn_task'),
     },
     {
       title:'信息',
@@ -38,7 +40,11 @@ struct HomePage {
     Tabs({barPosition:BarPosition.End}){
       ForEach(this.tabBars,(item:bars)=>{
         TabContent(){
+          if(item.name==="task")
           Text(item.title)
+          else if(item.name==="message")
+            Text(item.name)
+          else MyPage()
         }.tabBar(this.barCard(item))
       })
     }.onChange(index=>{

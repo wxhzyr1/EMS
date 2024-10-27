@@ -3,6 +3,7 @@
     "pages/login",
     "pages/advertise",
     "pages/HomePage/HomePage",
-    "pages/notFound"
+    "pages/notFound",
+    "pages/My/My"
   ]
 }
