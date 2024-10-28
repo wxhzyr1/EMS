@@ -27,6 +27,7 @@ struct Advertise {
   async aboutToAppear(): Promise<void> {
     const preference=await new UserSettingClass(getContext(this))
     this.advertise=await preference.getUserAd()
+    // AppStorage.set(USER_TOKEN,"")
     this.interval=setInterval(()=>{
       this.advertise.ad_time--;
       if(!this.advertise.ad_time){
