@@ -1,7 +1,7 @@
 import { getUserInfo, getUserTaskInfo } from '../../api'
 import { HmCard, HmCardItem } from '../../components'
 import { UserInfo, UserInfoModel, UserTaskInfo, UserTaskInfoModel, UsertaskInfoParamsModel } from '../../models'
-import { promptAction } from '@kit.ArkUI'
+import { promptAction, router } from '@kit.ArkUI'
 
 @Preview
 @Entry
@@ -105,15 +105,17 @@ struct MyPage {
             showBottomBorder:false
           })
         HmCardItem({
-          leftTitle:"车辆信息",
+          leftTitle:"任务数量",
           showBottomBorder:false
         })
         HmCardItem({
-          leftTitle:"车辆信息",
-          showBottomBorder:false
-        })
-        HmCardItem({
-          leftTitle:"车辆信息"
+          leftTitle:"系统设置",
+          showBottomBorder:false,
+          onRightClick:()=>{
+            router.pushUrl({
+              url:'pages/StystemConfig/ConfigPage'
+            })
+          }
         })
       }
     }.width('100%')

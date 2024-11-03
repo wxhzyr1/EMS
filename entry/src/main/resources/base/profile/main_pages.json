@@ -4,6 +4,7 @@
     "pages/advertise",
     "pages/HomePage/HomePage",
     "pages/notFound",
-    "pages/My/My"
+    "pages/My/My",
+    "pages/StystemConfig/ConfigPage"
   ]
 }
