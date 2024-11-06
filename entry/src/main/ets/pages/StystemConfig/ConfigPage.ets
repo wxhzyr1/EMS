@@ -1,9 +1,35 @@
-import { HmCard, HmCardItem,HmNavbarCard } from '../../components'
+import { HmCard, HmCardItem,HmNavbarCard, UserDialog } from '../../components'
+import { USER_TOKEN } from '../../constants'
+import { router } from '@kit.ArkUI'
 
+PersistentStorage.persistProp(USER_TOKEN,"")
 @Preview
 @Entry
 @Component
 struct ConfigPage {
+  Controller:CustomDialogController=new CustomDialogController({
+    builder:UserDialog({
+      title:"确认退出登录？",
+      Confirm:{
+        show:true,
+        handleClick:async ()=>{
+          AppStorage.set(USER_TOKEN,"")
+          this.Controller.close()
+          router.replaceUrl({
+            url:'pages/login'
+          })
+        }
+      },
+      Chancel:{
+        show:true,
+        handleClick:()=>{
+          this.Controller.close()
+        }
+      }
+    }),
+    alignment:DialogAlignment.Center,
+    autoCancel:false
+  })
   build() {
     Column(){
       HmNavbarCard({showBack:true,NavbarTitle:'设置'})
@@ -19,6 +45,7 @@ struct ConfigPage {
           .height(60)
           .fontColor($r('app.color.black'))
           .backgroundColor($r('app.color.white'))
+          .onClick(()=>this.Controller.open())
       }.padding({
         left:15,
         right:15

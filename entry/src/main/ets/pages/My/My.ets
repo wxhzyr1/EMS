@@ -102,7 +102,7 @@ struct MyPage {
       HmCard(){
           HmCardItem({
             leftTitle:"车辆信息",
-            showBottomBorder:false
+            showBottomBorder:false,
           })
         HmCardItem({
           leftTitle:"任务数量",

@@ -2,10 +2,10 @@
 @Component
 struct HmCardItem{
   @Prop
-  rightTitle:string="XXXX"
+  rightTitle:string=""
   leftTitle:string="车辆信息"
   showIcon:boolean=true
-  onRightClick:Function=()=>{}
+  onRightClick:()=>void=()=>{}
   showBottomBorder:boolean=true
   build() {
     Row(){
@@ -17,7 +17,7 @@ struct HmCardItem{
         if(this.showIcon)
         Image($r('app.media.ic_btn_more')).width(24)
           .height(24)
-      }.onClick(this.onRightClick())
+      }.onClick(this.onRightClick)
     }.backgroundColor($r('app.color.white'))
     .height(60).width('100%')
     .justifyContent(FlexAlign.SpaceBetween)
