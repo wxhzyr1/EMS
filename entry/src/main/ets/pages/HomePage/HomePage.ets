@@ -1,3 +1,4 @@
+import { taskFrame } from '../../components'
 import MyPage from '../My/My'
 
 interface bars{
@@ -41,7 +42,7 @@ struct HomePage {
       ForEach(this.tabBars,(item:bars)=>{
         TabContent(){
           if(item.name==="task")
-          Text(item.title)
+          taskFrame()
           else if(item.name==="message")
             Text(item.name)
           else MyPage()
