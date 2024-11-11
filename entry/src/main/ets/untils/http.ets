@@ -9,9 +9,11 @@ async  function requestHttp<T>(url:string,method:http.RequestMethod=http.Request
   if(method===http.RequestMethod.GET&&data){
     const arr=Object.keys(data);
     let getUrl=arr.reduce((str:string,item:string)=>{
-      return str+item+"="+data[item]+"&"
+
+      return data[item]===undefined?str:str+item+"="+data[item]+"&"
+      // return str+item+"="+data[item]+"&"
     },httpUrl+"?")
-    getUrl=getUrl.substring(0,getUrl.length-2)
+    httpUrl=getUrl.substring(0,getUrl.length-1)
   }
   const httpConfig:http.HttpRequestOptions={
     method,
@@ -26,6 +28,7 @@ async  function requestHttp<T>(url:string,method:http.RequestMethod=http.Request
     // AlertDialog.show({
     //   message:httpUrl+"--"+JSON.stringify(httpConfig)
     // })
+    // httpUrl="https://slwl-api.itheima.net/driver/tasks/list?page=1&pageSize=5&status=1"
     const res=await httpRequest.request(httpUrl,httpConfig)
     const result=JSON.parse(res.result as string) as httpType<T>
     console.log(JSON.stringify(result))
@@ -58,5 +61,6 @@ async  function requestHttp<T>(url:string,method:http.RequestMethod=http.Request
   }
 }
 export function axios<T>(url:string,method:http.RequestMethod,data?:object):Promise<T>{
+  console.log(JSON.stringify(data))
   return requestHttp<T>(url,method,data)
 }

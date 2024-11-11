@@ -1,4 +1,5 @@
 import { promptAction } from '@kit.ArkUI'
+import waitingComponents from './waitingCompontents'
 
 @Preview
 @Component
@@ -27,7 +28,8 @@ struct taskFrame{
     Tabs({barPosition:BarPosition.Start}){
       ForEach(this.tabNameList,(name:string)=>{
         TabContent(){
-          Text(name)
+          if(name===this.tabNameList[0])
+            waitingComponents()
         }.tabBar(this.tabItem(name))
       })
     }.onChange(index=>{
