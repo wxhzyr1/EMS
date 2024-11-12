@@ -1,8 +1,8 @@
 import { getTaskList } from '../../api'
 import { TaskListItemModel, TaskListParams, TaskListParamsModel, TaskTypeEnum } from '../../models'
 import TaskItemCard from './TaskItemCard'
-import { faceDetector } from '@kit.CoreVisionKit'
 import { HmLoading } from '../HmLoading'
+import { promptAction } from '@kit.ArkUI'
 
 @Preview
 @Component
@@ -42,6 +42,25 @@ struct waitingComponents{
   loading:boolean=false
   @State
   showEnd:boolean=false
+  @State
+  showTopLoading:boolean=false
+  async getMoreData(end:boolean){
+    if(this.loading)return
+    if(end)
+    this.loading=true
+    else {
+      this.showEnd=false
+      this.taskListData=[]
+      this.curPage=1
+      this.allPages=1
+    }
+    await this.getTaskList()
+    this.loading=false
+    promptAction.showToast({
+      message:"ok"
+    })
+    this.showTopLoading=false
+  }
   async getTaskList(){
     if(this.allPages<this.curPage){
       this.showEnd=true
@@ -56,28 +75,27 @@ struct waitingComponents{
   }
   build() {
     Column(){
-      List(){
-        ForEach(this.taskListData,(item:TaskListItemModel)=>{
+      Refresh({refreshing:$$this.showTopLoading}){
+        List(){
+          ForEach(this.taskListData,(item:TaskListItemModel)=>{
+            ListItem(){
+              TaskItemCard({item})
+            }
+          })
+          if(this.showEnd)
           ListItem(){
-            TaskItemCard({item})
+            Text("人家也是有底线哒~~").width('100%').height(40).textAlign(TextAlign.Center)
           }
-        })
-        if(this.showEnd)
-        ListItem(){
-          Text("人家也是有底线哒~~").width('100%').height(40).textAlign(TextAlign.Center)
-        }
-        if(this.loading)
-        ListItem(){
-          Row(){
-            Text("正在加载中")
-            HmLoading({hwidth:20})
-          }.width('100%').justifyContent(FlexAlign.Center)
-        }
-      }.onReachEnd(async ()=>{
-        if(this.loading)return
-        this.loading=true
-        await this.getTaskList()
-        this.loading=false
+          if(this.loading)
+          ListItem(){
+            Row(){
+              Text("正在加载中")
+              HmLoading({hwidth:20})
+            }.width('100%').justifyContent(FlexAlign.Center)
+          }
+        }.onReachEnd(()=>this.getMoreData(true))
+      }.onStateChange(value=>{
+        if(value===RefreshStatus.Refresh)this.getMoreData(false)
       })
     }
   }
