@@ -5,6 +5,7 @@
     "pages/HomePage/HomePage",
     "pages/notFound",
     "pages/My/My",
-    "pages/StystemConfig/ConfigPage"
+    "pages/StystemConfig/ConfigPage",
+    "pages/HomePage/taskDetails"
   ]
 }

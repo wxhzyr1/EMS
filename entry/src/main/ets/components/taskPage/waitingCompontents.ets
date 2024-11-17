@@ -56,10 +56,10 @@ struct waitingComponents{
     }
     await this.getTaskList()
     this.loading=false
-    promptAction.showToast({
-      message:"ok"
-    })
     this.showTopLoading=false
+  }
+  async reachEnd(page:number){
+    return await getTaskList(this.queryParams)
   }
   async getTaskList(){
     if(this.allPages<this.curPage){

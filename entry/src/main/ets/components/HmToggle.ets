@@ -1,0 +1,36 @@
+@Preview
+@Component
+struct HmToggle{
+  @BuilderParam
+  componentsContent:()=>void
+  @State
+  toggleOpen:boolean=true
+  title:string=""
+  build() {
+    Column(){
+      Row(){
+        Text(this.title).fontSize(16).fontColor($r('app.color.text_primary')).fontWeight(600)
+        Image(this.toggleOpen?$r('app.media.ic_btn_add'):$r('app.media.ic_btn_cut')).width(24).height(24)
+      }.justifyContent(FlexAlign.SpaceBetween).width('100%')
+      .height(30).onClick(()=>{
+        animateTo({duration:500},()=>{
+          this.toggleOpen=!this.toggleOpen
+        })
+      }).border({
+        width:{
+          bottom:this.toggleOpen?0:1
+        },
+        color:$r('app.color.gray_1')
+      })
+      if(this.componentsContent&&!this.toggleOpen)
+      this.componentsContent()
+    }.padding(19.5).margin({
+      left:15,
+      top:15,
+      right:15
+    }).backgroundColor($r('app.color.white'))
+  }
+}
+export{
+  HmToggle
+}

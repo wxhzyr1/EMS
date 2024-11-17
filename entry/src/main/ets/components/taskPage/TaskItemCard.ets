@@ -32,9 +32,9 @@ struct TaskItemCard {
   //
   toPickUp(){
     router.pushUrl({
-      url:'pages/TaskDetail/TaskDetail',
+      url:'pages/HomePage/taskDetails',
       params:{
-        id: this.item.id,
+        id:this.item.id
       }
     })
   }
