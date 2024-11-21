@@ -1,4 +1,5 @@
 import { promptAction } from '@kit.ArkUI'
+import { TaskListParams, TaskListParamsModel, TaskTypeEnum } from '../../models'
 import waitingComponents from './waitingCompontents'
 
 @Preview
@@ -30,6 +31,14 @@ struct taskFrame{
         TabContent(){
           if(name===this.tabNameList[0])
             waitingComponents()
+          else if(name===this.tabNameList[1])
+            waitingComponents({queryParams:new TaskListParamsModel(
+              {
+                page:1,
+                pageSize:5,
+                status:TaskTypeEnum.Line
+              } as TaskListParams
+            )})
         }.tabBar(this.tabItem(name))
       })
     }.onChange(index=>{
