@@ -1,6 +1,6 @@
 import { promptAction, router } from '@kit.ArkUI'
 import { HmNavbarCard, HmToggle, HmUpload } from '../../components'
-import { TaskDetailInfo,idParams, TaskDetailInfoModel } from '../../models'
+import { TaskDetailInfo,idParams, TaskDetailInfoModel, TaskTypeEnum } from '../../models'
 import {getTaskDetails} from '../../api'
 @Preview
 @Entry
@@ -12,6 +12,23 @@ struct taskDetails{
   async getTaskDetails(){
     this.detailsData=await getTaskDetails((router.getParams() as idParams).id)
   }
+  //获取提货状态
+  getPickUpState() {
+    return true
+    // return this.taskDetailData.cargoPickUpPictureList?.length &&
+    //         this.taskDetailData.cargoPictureList?.length &&
+    //         this.taskDetailData.cargoPickUpPictureList.every(item => !!item.url) &&
+    //         this.taskDetailData.cargoPictureList.every(item =>!!item.url)
+  }
+  //获取提货状态
+  getDeliveryState() {
+    return true
+    // return this.taskDetailData.deliverPictureList?.length &&
+    // this.taskDetailData.deliverPictureList?.length &&
+    // this.taskDetailData.certificatePictureList.every(item => !!item.url) &&
+    // this.taskDetailData.certificatePictureList.every(item =>!!item.url)
+  }
+
   aboutToAppear(): void {
     this.getTaskDetails()
   }
@@ -135,6 +152,85 @@ struct taskDetails{
     .margin({ top: 14 })
 
   }
+  @Builder
+  getBottomBtn() {
+    //已完成不显示任何按钮
+    Row() {
+      if (this.detailsData.status === TaskTypeEnum.Waiting) {
+        Button("延迟收货", { type: ButtonType.Capsule })
+          .backgroundColor($r('app.color.btn_gray'))
+          .fontColor($r('app.color.text_primary'))
+          .fontSize(16)
+          .height(50)
+          .width(125)
+          .onClick(()=>{
+            router.pushUrl({
+              url: 'pages/deliay/Delay',
+              params:{
+                id:this.detailsData.id,
+                oldTime:this.detailsData.planDepartureTime
+              }
+            })
+          })
+        Button("提货", { type: ButtonType.Capsule })
+          .backgroundColor(this.getPickUpState() ? $r('app.color.primary') : $r('app.color.primary_disabled'))
+          .fontColor($r('app.color.white'))
+          .height(50)
+          .flexGrow(1)
+          .margin({ left: 13 })
+          .enabled(this.getPickUpState())
+          .onClick(() => {
+            // this.btnPickUp()
+          })
+      } else if (this.detailsData.status === TaskTypeEnum.Line) {
+        Button("上报异常", { type: ButtonType.Capsule })
+          .backgroundColor($r('app.color.btn_gray'))
+          .fontColor($r('app.color.text_primary'))
+          .fontSize(16)
+          .height(50)
+          .width(125)
+          .onClick(()=> {
+            router.pushUrl({
+              url: 'pages/ExceptionReport/ExceptionReport',
+              params: {
+                id: this.detailsData.transportTaskId
+              }
+            })
+          })
+        Button("交付", { type: ButtonType.Capsule })
+          .backgroundColor(this.getDeliveryState() ? $r('app.color.primary') : $r('app.color.primary_disabled'))
+          .fontColor($r('app.color.white'))
+          .height(50)
+          .flexGrow(1)
+          .margin({ left: 13 })
+          .enabled(this.getDeliveryState())
+          .onClick(() => {
+            // this.btnDeliver()
+
+          })
+      } else if (this.detailsData.status === TaskTypeEnum.Delivered) {
+
+        Button("回车登记")
+          .backgroundColor($r('app.color.primary'))
+          .fontColor($r('app.color.white'))
+          .height(50)
+          .enabled(this.getDeliveryState())
+          .onClick(() => {
+            // this.toCarRecord()
+          })
+      }
+
+
+    }
+    .width('100%')
+    .padding({ left: 15, right: 15 })
+    .height(70)
+    .justifyContent(FlexAlign.SpaceBetween)
+    .alignItems(VerticalAlign.Center)
+    .backgroundColor($r('app.color.white'))
+    .position({ y: '100%' })
+    .translate({ y: -70 })
+  }
 
   @Builder
   getTransLineContent() {
@@ -177,14 +273,21 @@ struct taskDetails{
           HmToggle({title:"司机信息" }){
             this.getDriverContent()
           }
+          if(this.detailsData.status===TaskTypeEnum.Waiting)
           HmToggle({title:"提货信息" }){
             HmUpload({title:"请拍照上传凭证"})
             HmUpload({title:"请拍照上传货品"})
+          }
+          else if(this.detailsData.status===TaskTypeEnum.Line)
+          HmToggle({title:"交货信息" }){
+            HmUpload({title:"请拍照上传交货凭证"})
+            HmUpload({title:"请拍照上传交货货品"})
           }
         }.width('100%').backgroundColor($r('app.color.gray_1'))
       }.padding({
         bottom:100,
       }).backgroundColor($r('app.color.gray_1'))
+      this.getBottomBtn()
     }
   }
 }
