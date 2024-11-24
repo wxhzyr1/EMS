@@ -21,7 +21,7 @@ async  function requestHttp<T>(url:string,method:http.RequestMethod=http.Request
     connectTimeout:15000,
     header:{
       'Content-Type':"application/json",
-      'Authorization': AppStorage.get(USER_TOKEN)
+      'Authorization': AppStorage.get(USER_TOKEN)||''
     }
   }
   try {

@@ -1,19 +1,46 @@
 import { picker } from '@kit.CoreFileKit'
-import { PickerOptions } from '@kit.MediaLibraryKit'
-import { promptAction } from '@kit.ArkUI'
+import { fileIo as fs } from '@kit.CoreFileKit';
+import { util } from '@kit.ArkTS';
+import { promptAction } from '@kit.ArkUI';
+import { request } from '@kit.BasicServicesKit';
+import { uploadImg } from '../api';
 
 @Component
 struct HmUpload{
   title:string=""
-  selectImg(){
-    promptAction.showToast({
-      message:"ok"
-    })
+  @State imgList:string[]=[]
+  async selectImg(){
+    let imgUpload:request.File[]=[]
     const imgPicker=new picker.PhotoViewPicker()
-    imgPicker.select({
+    const res=await imgPicker.select({
       MIMEType:picker.PhotoViewMIMETypes.IMAGE_TYPE,
       maxSelectNumber:3
     })
+    this.imgList=res.photoUris
+    const addFileName="lh"
+    const defaultUri=getContext(this).cacheDir+"/"+addFileName
+    if(this.imgList?.length){
+      if(!fs.listFileSync(getContext(this).cacheDir).includes(addFileName)){
+        fs.mkdirSync(defaultUri)
+      }
+      this.imgList.forEach(item=>{
+        const file=fs.openSync(item,fs.OpenMode.READ_ONLY)
+        const templateName=util.generateRandomUUID()+'.jpg'
+        const fileName=defaultUri+"/"+templateName
+        //文件描述符、目标路径
+        fs.copyFileSync(file.fd,fileName)
+        imgUpload.push({
+          name:"file",
+          filename:templateName,
+          type:"jpg",
+          uri:`internal://cache/${addFileName}/${templateName}`
+        })
+      })
+    }
+    // promptAction.showDialog({
+    //   message:JSON.stringify(fs.listFileSync(defaultUri))
+    // })
+    uploadImg(getContext(this),imgUpload)
   }
   build() {
     Column(){
